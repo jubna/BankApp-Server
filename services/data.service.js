@@ -34,11 +34,11 @@ let accountDetails = {
      }
    
     }
-    const login=(acno,pswd)=>{
+    const login=(req,acno,pswd)=>{
         var users=accountDetails;
           if(acno in users){
             if (pswd == users[acno]["password"]) {
-              currentUser=users[acno]["username"];
+              req.session.currentUser=users[acno];
              
               return{
                 statusCode:200,
@@ -66,17 +66,22 @@ let accountDetails = {
         }
 
        const deposit=(acno,pwd,amt)=>{
+
+       
             var user=accountDetails;
             amt=parseInt(amt);
+           
             if(acno in user){
+
               if(pwd == user[acno]["password"]){
                
                 user[acno]["balance"]+=amt;
-                 var bal=user[acno]["balance"];
+               
                  return{
                     statusCode:200,
                     status:true,
-                    message:`your account has been credited with amount: ${amt} ,current bal: ${bal}`
+                    balance:user[acno]["balance"],
+                    message:`your account has been credited with amount: ${amt} ,current bal: ${user[acno]["balance"]}`
                  }
               }
               else{
@@ -96,9 +101,11 @@ let accountDetails = {
             message:"invalid account number"
              }
             }
+            
           }
 
          const withdraw=(acno,pwd,amt)=>{
+        
             var user=accountDetails;
              amt=parseInt(amt);
             if(acno in user){
@@ -107,11 +114,12 @@ let accountDetails = {
                   if(user[acno]["balance"]>amt){
                     user[acno]["balance"]-=amt;
                   
-                    var bal=user[acno]["balance"];
+                   
                     return{
                         statusCode:200,
                         status:true,
-                        message:`your account has been withdrawn with amount: ${amt} ,current bal: ${bal}`
+                        balance:user[acno]["balance"],
+                        message:`your account has been withdrawn with amount: ${amt} ,current bal: ${user[acno]["balance"]}`
                      }
                   }
                   else{
