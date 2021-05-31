@@ -23,7 +23,7 @@ const logMiddleware=(req,res,next)=>{
     next();
 }
 //call it using app.use . it is used here globally
-app.use(logMiddleware);
+// app.use(logMiddleware);
 
 //middleware 3.route specific => for getting the current user who is loged in, pass it to both in deposit & withdraw
 const authMiddleware=(req,res,next)=>{
@@ -53,16 +53,20 @@ app.get('/',(req,res)=>{
 //POST - register
 app.post('/register',(req,res)=>{
    // console.log(req.body)
-    const result=dataService.register(req.body.uname,req.body.acno,req.body.pswd)
-    res.status(result.statusCode).json(result)
+    dataService.register(req.body.uname,req.body.acno,req.body.pswd)
+    .then(result=>{
+        res.status(result.statusCode).json(result)
+    })
+    
    //console.log(res.json(result)) 
    });
 //POST - login
    app.post('/login',(req,res)=>{
     // console.log(req.body)
-     const result=dataService.login(req,req.body.acno,req.body.pswd)
+   dataService.login(req,req.body.acno,req.body.pswd)
+   .then(result=>{
      res.status(result.statusCode).json(result)
-    
+   })
     });
 
     app.post('/deposit',authMiddleware,(req,res)=>{            //middleware is used ith the req

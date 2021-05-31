@@ -1,4 +1,4 @@
-
+const db = require('./db')
 
 let currentUser;
 let accountDetails = {
@@ -9,7 +9,7 @@ let accountDetails = {
   };
 
  const register=(uname,acno,pswd)=>{
-    var user=accountDetails;
+   /*  var user=accountDetails;
      if(acno in user){
       
        return {
@@ -32,10 +32,57 @@ let accountDetails = {
            message:"successfully registered"
        }
      }
-   
+    */
+       return db.User.findOne({acno})
+       .then(user=>{
+         if(user){
+        return {
+          statusCode:422,
+          status:false,
+          message:"User exist"
+        }
+      }
+        else{
+         const newUser=new db.User({
+            acno,
+            username:uname,
+            password:pswd,
+            balance:0
+          })
+          newUser.save();
+           
+       return{
+        statusCode:200,
+           status:true,
+           message:"successfully registered"
+       }
+        }
+       })
+
     }
-    const login=(req,acno,pswd)=>{
-        var users=accountDetails;
+    const login=(req,acno,password)=>{
+      var acno=parseInt(acno);
+      return db.User.findOne({acno,password})
+      .then(user=>{
+        if(user){
+          req.session.currentUser=user;
+             
+          return{
+            statusCode:200,
+               status:true,
+               message:"successfully login"
+           }
+        }
+        else{
+          return{
+            statusCode:422,
+              status:false,
+              message:"Invalid credentials"
+          }
+        }
+      })
+
+       /*  var users=accountDetails;
           if(acno in users){
             if (pswd == users[acno]["password"]) {
               req.session.currentUser=users[acno];
@@ -62,7 +109,7 @@ let accountDetails = {
                   status:false,
                   message:"Invalid account"
               }
-          }
+          } */
         }
 
        const deposit=(acno,pwd,amt)=>{
