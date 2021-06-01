@@ -72,16 +72,21 @@ app.post('/register',(req,res)=>{
     app.post('/deposit',authMiddleware,(req,res)=>{            //middleware is used ith the req
         // console.log(req.body)
         
-         const result=dataService.deposit(req.body.acno,req.body.pswd,req.body.amt)
-         res.status(result.statusCode).json(result)
-        
+         dataService.deposit(req.body.acno,req.body.pswd,req.body.amt)
+         .then(result=>{
+            res.status(result.statusCode).json(result)
+         })
+       
         });
 
         app.post('/withdraw',authMiddleware,(req,res)=>{
             // console.log(req.body)
            
-             const result=dataService.withdraw(req.body.acno,req.body.pswd,req.body.amt)
-             res.status(result.statusCode).json(result)
+            dataService.withdraw(req.body.acno,req.body.pswd,req.body.amt)
+            .then(result=>{
+                res.status(result.statusCode).json(result)
+            })
+            
             
             });
     

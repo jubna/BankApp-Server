@@ -112,9 +112,31 @@ let accountDetails = {
           } */
         }
 
-       const deposit=(acno,pwd,amt)=>{
+       const deposit=(acno,password,amount)=>{
 
-       
+        amount=parseInt(amount);
+        return db.User.findOne({acno,password})
+        .then(user=>{
+          if(!user){
+            return { 
+              statusCode:422,
+          status:false,
+          message:"invalid credentials"
+           }
+          }
+          else{
+            user.balance+=amount;
+            user.save();
+            return{
+              statusCode:200,
+              status:true,
+              balance:user.balance,
+              message:"your account has been credited with amount:" +amount+ ",current bal: "+user.balance
+           }
+          }
+        })
+
+       /* 
             var user=accountDetails;
             amt=parseInt(amt);
            
@@ -147,13 +169,45 @@ let accountDetails = {
             status:false,
             message:"invalid account number"
              }
-            }
+            } */
+
+           
             
           }
 
-         const withdraw=(acno,pwd,amt)=>{
-        
-            var user=accountDetails;
+         const withdraw=(acno,password,amt)=>{
+          amt=parseInt(amt);
+          return db.User.findOne({acno,password})
+          .then(user=>{
+            if(!user){
+              return { 
+                statusCode:422,
+            status:false,
+            message:"invalid credentials"
+             }
+            }
+            else{
+              if(user.balance>amt){
+                user.balance-=amt;
+                user.save();
+                return{
+                  statusCode:200,
+                  status:true,
+                  balance:user.balance,
+                  message:`your account has been withdrawn with amount: ${amt} ,current bal: ${user.balance}`
+               }
+              }
+              else{
+                return { 
+                  statusCode:422,
+              status:false,
+              message:"You account balance is low"
+               }
+              }
+            }
+          })
+
+           /*  var user=accountDetails;
              amt=parseInt(amt);
             if(acno in user){
               if(pwd == user[acno]["password"]){
@@ -194,7 +248,7 @@ let accountDetails = {
         status:false,
         message:"invalid account number"
          }
-        }
+        } */
         }
 
      module.exports={
