@@ -3,6 +3,7 @@ const express = require('express');
 const app = express();
 const session = require('express-session');
 const dataService = require('./services/data.service')
+const cors = require('cors')
 
 app.use(express.json());
 app.use(session({
@@ -10,6 +11,11 @@ app.use(session({
     resave:false,
     saveUninitialized:false
 }));
+
+app.use(cors({
+    origins:'http://localhost:4200/',
+    credentials:true
+}))
 //GET - READ
 
 //middleware 1.using callback fun

@@ -70,7 +70,8 @@ let accountDetails = {
           return{
             statusCode:200,
                status:true,
-               message:"successfully login"
+               message:"successfully login",
+               name:user.username
            }
         }
         else{
