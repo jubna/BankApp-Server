@@ -13,9 +13,9 @@ app.use(session({
 }));
 
 app.use(cors({
-    origins:'http://localhost:4200/',
-    credentials:true
-}))
+    origin:'http://localhost:4200', //client path 
+    credentials:true  //to use cookies
+  }))
 //GET - READ
 
 //middleware 1.using callback fun
@@ -77,7 +77,7 @@ app.post('/register',(req,res)=>{
 
     app.post('/deposit',authMiddleware,(req,res)=>{            //middleware is used ith the req
         // console.log(req.body)
-        
+        console.log(req.body.acno,req.body.pswd,req.body.amt);
          dataService.deposit(req.body.acno,req.body.pswd,req.body.amt)
          .then(result=>{
             res.status(result.statusCode).json(result)
@@ -88,7 +88,7 @@ app.post('/register',(req,res)=>{
         app.post('/withdraw',authMiddleware,(req,res)=>{
             // console.log(req.body)
            
-            dataService.withdraw(req.body.acno,req.body.pswd,req.body.amt)
+            dataService.withdraw(req,req.body.acno,req.body.pswd,req.body.amt)
             .then(result=>{
                 res.status(result.statusCode).json(result)
             })
