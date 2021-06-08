@@ -74,6 +74,15 @@ app.post('/register',(req,res)=>{
      res.status(result.statusCode).json(result)
    })
     });
+   app.post('/checkBalance',authMiddleware,(req,res)=>{            //middleware is used ith the req
+    // console.log(req.body)
+    console.log(req.body.acno,req.body.pswd);
+     dataService.checkBalance(req.body.acno,req.body.pswd)
+     .then(result=>{
+        res.status(result.statusCode).json(result)
+     })
+   
+    });
 
     app.post('/deposit',authMiddleware,(req,res)=>{            //middleware is used ith the req
         // console.log(req.body)
@@ -84,6 +93,16 @@ app.post('/register',(req,res)=>{
          })
        
         });
+
+        app.post('/transfer',authMiddleware,(req,res)=>{            //middleware is used ith the req
+            // console.log(req.body)
+            console.log(req.body.acno,req.body.pswd,req.body.t_acno,req.body.amt);
+             dataService.transfer(req,req.body.acno,req.body.pswd,req.body.t_acno,req.body.amt)
+             .then(result=>{
+                res.status(result.statusCode).json(result)
+             })
+           
+            });
 
         app.post('/withdraw',authMiddleware,(req,res)=>{
             // console.log(req.body)
@@ -110,6 +129,13 @@ app.patch('/',(req,res)=>{
 //DELETE - DLT
 app.delete('/',(req,res)=>{
     res.send("THIS IS A DELETE METHOD")
+   })  
+
+   app.delete('/deleteAccDetails/:acno',authMiddleware,(req,res)=>{
+    dataService.deleteAccDetails(req.params.acno)
+            .then(result=>{
+                res.status(result.statusCode).json(result)
+            })
    })  
 
 app.listen(3000,()=>{

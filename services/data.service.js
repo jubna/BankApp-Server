@@ -71,7 +71,8 @@ let accountDetails = {
             statusCode:200,
                status:true,
                message:"successfully login",
-               name:user.username
+               name:user.username,
+               acno:user.acno
            }
         }
         else{
@@ -112,6 +113,31 @@ let accountDetails = {
               }
           } */
         }
+
+        const checkBalance=(acno,password)=>{
+
+        
+          return db.User.findOne({acno,password})
+          .then(user=>{
+            if(!user){
+              return { 
+                statusCode:422,
+            status:false,
+            message:"invalid credentials"
+             }
+            }
+            else{
+              return{
+                statusCode:200,
+                status:true,
+                balance:user.balance,
+                message:`Available balance ${user.balance}`
+             }
+            }
+          })
+
+        }
+  
 
        const deposit=(acno,password,amount)=>{
 
@@ -175,6 +201,13 @@ let accountDetails = {
            
             
           }
+
+          const transfer=(req,acno,password,t_acno,amt)=>{
+
+          
+            } 
+          
+          
 
          const withdraw=(req,acno,password,amt)=>{
           amt=parseInt(amt);
@@ -259,9 +292,32 @@ let accountDetails = {
         } */
         }
 
+        const deleteAccDetails=(acno)=>{
+          return db.User.deleteOne({acno})
+            .then(user=>{
+            if(!user){
+              return { 
+                statusCode:422,
+            status:false,
+            message:"operation failed"
+             }
+            }
+            else{
+              return{
+                statusCode:200,
+                status:true,
+                message:"your account " +acno +"deleted"
+            }
+          }
+          })
+        }
+
      module.exports={
        register,
        login,
+       checkBalance,
        deposit,
-       withdraw
+       withdraw,
+       transfer,
+       deleteAccDetails
    }
