@@ -13,6 +13,9 @@ app.use(session({
 }));
 
 app.use(cors({
+   //origin:'http://192.168.10.24:8080',
+
+
     origin:'http://localhost:4200', //client path 
     credentials:true  //to use cookies
   }))
@@ -96,8 +99,8 @@ app.post('/register',(req,res)=>{
 
         app.post('/transfer',authMiddleware,(req,res)=>{            //middleware is used ith the req
             // console.log(req.body)
-            console.log(req.body.acno,req.body.pswd,req.body.t_acno,req.body.amt);
-             dataService.transfer(req,req.body.acno,req.body.pswd,req.body.t_acno,req.body.amt)
+            console.log(req.body.t_acno,req.body.amt);
+             dataService.transfer(req.body.acno,req.body.t_acno,req.body.amt)
              .then(result=>{
                 res.status(result.statusCode).json(result)
              })

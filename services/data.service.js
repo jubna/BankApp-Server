@@ -202,10 +202,43 @@ let accountDetails = {
             
           }
 
-          const transfer=(req,acno,password,t_acno,amt)=>{
-
-          
-            } 
+          const transfer=(acno,t_acno,amt)=>{
+            amt=parseInt(amt);
+             
+            const login_user=()=>{
+              return  db.User.findOne({acno:acno})
+              .then((user)=>{
+                if(user){
+                  user.balance-=amt; 
+                     user.save()
+                     return{
+                      statusCode:200,
+                         status:true,
+                         acno:user.acno,
+                         balance:user.balance,
+                     }
+                }
+              })
+            }
+            
+            return  db.User.findOne({acno:t_acno})
+            .then((user)=>{
+              if(user){
+                user.balance+=amt;
+                   user.save()
+                return{
+                  statusCode:200,
+                     status:true,
+                     message:"money sent",
+                     name:user.username,
+                     acno:user.acno,
+                     balance:user.balance,
+                     fun:login_user()
+                 }
+              }
+            })
+          }
+ 
           
           
 
